@@ -4,11 +4,14 @@ import org.apache.cordova.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
+
 public class Hello extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-
+PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
         if (action.equals("greet")) {
 
             String name = data.getString(0);
