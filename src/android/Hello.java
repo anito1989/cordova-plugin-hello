@@ -9,10 +9,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
+import android.app.Activity;
 import android.content.res.AssetManager;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+
 
 import com.honeywell.mobility.print.LinePrinter;
 import com.honeywell.mobility.print.LinePrinterException;
@@ -22,12 +24,12 @@ import com.honeywell.mobility.print.PrintProgressListener;
 public class Hello extends CordovaPlugin {
     Context context;
     AssetManager assetManager;
+    String debugTrace = "";
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         context = this.cordova.getActivity().getApplicationContext();
-        assetManager = this.cordova.getActivity().getAssets();
-        String debugTrace = "";
+        assetManager = this.cordova.getActivity().getAssets();       
 
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
