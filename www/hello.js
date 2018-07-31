@@ -5,9 +5,9 @@ module.exports = {
         cordova.exec(successCallback, errorCallback, "Hello", "greet", [name]);
     },
     getDebugTrace: function (successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "getDebugTrace");
+        cordova.exec(successCallback, errorCallback, "Hello", "getDebugTrace", [null]);
     },
     clearDebugTrace: function (successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "clearDebugTrace");
+        cordova.exec(successCallback, errorCallback, "Hello", "clearDebugTrace", [null]);
     },
 };
