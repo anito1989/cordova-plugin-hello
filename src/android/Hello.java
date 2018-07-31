@@ -40,7 +40,7 @@ public class Hello extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-      final Context context = this.cordova.getActivity().getApplicationContext();
+    //  final Context context = ;
       assetManager = this.cordova.getActivity().getAssets();       
 
 
@@ -53,7 +53,7 @@ public class Hello extends CordovaPlugin {
             // Setup context
             debugTrace += " Setting up extra setting!;";
             LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
-            exSettings.setContext(context);
+            exSettings.setContext(this.cordova.getActivity().getApplicationContext());
             debugTrace += " Done Setting up extra setting!;";
             }
             catch (Exception e) {
