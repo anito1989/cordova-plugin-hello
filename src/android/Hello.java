@@ -1,13 +1,16 @@
 package com.example.plugin;
 
-import org.apache.cordova.*;
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.annotation.Retention;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.util.Hashtable;
+import java.util.Set;
+import java.util.UUID;
+import java.io.ByteArrayOutputStream;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
@@ -18,10 +21,9 @@ import android.util.Base64;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.cordova.*;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
-
-
 
 import com.honeywell.mobility.print.LinePrinter;
 import com.honeywell.mobility.print.LinePrinterException;
@@ -34,8 +36,8 @@ public class Hello extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-       Context context = this.cordova.getActivity().getApplicationContext();
-        assetManager = this.cordova.getActivity().getAssets();       
+      final Context context = this.cordova.getActivity().getApplicationContext();
+      assetManager = this.cordova.getActivity().getAssets();       
 
 
         try {
@@ -57,7 +59,7 @@ public class Hello extends CordovaPlugin {
                 String errMsg = e.getMessage();
                 String stackTrace = writer.toString();
                 printWriter.flush();
-
+                callbackContext.error(debugTrace + " - " + errMsg + " - " + stackTrace);
                 // PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace + " - " + errMsg + " - " + stackTrace);
                 // callbacks.sendPluginResult(resultB);            
             }
