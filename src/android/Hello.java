@@ -36,6 +36,7 @@ import com.honeywell.mobility.print.*;
 public class Hello extends CordovaPlugin {
     AssetManager assetManager;
     String debugTrace = "";
+    LinePrinter lp = null;
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
@@ -64,7 +65,7 @@ public class Hello extends CordovaPlugin {
             debugTrace += " Done Setting up extra setting!;";
 
             PrintTask task = new PrintTask(jsonCmdAttribStr, sPrinterID, sPrinterURI, exSettings);
-            task.execute("go go go");
+            task.execute(args.getString(0));
 
             callbackContext.success(debugTrace);
         } catch (Exception e) {
@@ -151,11 +152,12 @@ public class Hello extends CordovaPlugin {
          * Runs on the UI thread before doInBackground(Params...).
          */
         @Override
-        protected String doInBackground(String... args) {
-            LinePrinter lp = null;
+        protected String doInBackground(String... args) {          
             try {
                 lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
                 debugTrace += " Created LinePrinter!;";
+
+                String image = args[0];
 
                 // A retry sequence in case the bluetooth socket is temporarily not ready
                 int numtries = 0;
@@ -191,10 +193,25 @@ public class Hello extends CordovaPlugin {
 
                 lp.setBold(true);
                 lp.write("ORIGINAL");
+                lp.newLine(1);
                 lp.write("Pablo coll");
+                lp.newLine(1);
                 lp.setBold(false);
                 lp.write("Slava not");           
-				lp.newLine(2);
+                lp.newLine(2);
+                
+                if (image != null)
+				{
+					lp.writeGraphicBase64(image,
+							LinePrinter.GraphicRotationDegrees.DEGREE_0,
+							72,   // Offset in printhead dots from the left of the page
+							220,  // Desired graphic width on paper in printhead dots
+							100); // Desired graphic height on paper in printhead dots
+				}
+
+                lp.lineFeed();
+                lp.disconnect(); // Disconnects from the printer
+                lp.close(); // Releases resources
 
             } catch (Exception e) {
                 StringWriter writer = new StringWriter();
