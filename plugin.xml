@@ -22,7 +22,7 @@
         <param name="android-package" value="com.example.plugin.Hello"/>
       </feature>
     </config-file>
-    <lib-file src="src/android/lib/hsm-android-print.jar" />
+    <lib-file src="src/android/libs/hsm-android-print.jar" />
     <source-file src="src/android/Hello.java" target-dir="src/com/example/plugin/"/>
   </platform>
 
