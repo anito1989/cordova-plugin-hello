@@ -64,8 +64,15 @@ public class Hello extends CordovaPlugin {
             exSettings.setContext(this.cordova.getActivity().getApplicationContext());
             debugTrace += " Done Setting up extra setting!;";
 
+            String param = args.getString(0);
             PrintTask task = new PrintTask(jsonCmdAttribStr, sPrinterID, sPrinterURI, exSettings);
-            task.execute(args.getString(0));
+            if(param != null){
+                task.execute(param); 
+            }
+            else{
+                task.execute();
+            }
+            
 
             callbackContext.success(debugTrace);
         } catch (Exception e) {
@@ -209,7 +216,7 @@ public class Hello extends CordovaPlugin {
 							100); // Desired graphic height on paper in printhead dots
 				}
 
-                lp.lineFeed();
+                lp.formFeed();
                 lp.disconnect(); // Disconnects from the printer
                 lp.close(); // Releases resources
 
