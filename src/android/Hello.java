@@ -80,9 +80,10 @@ public class Hello extends CordovaPlugin {
 
     private String loadPrintSettings(AssetManager assetManager) {
 
-        try {
-            InputStream input = null;
-            ByteArrayOutputStream output = null;
+        InputStream input = null;
+        ByteArrayOutputStream output = null;
+        
+        try {           
             input = assetManager.open("www/files/printer_profiles.JSON");
             output = new ByteArrayOutputStream(8000);
             byte[] buf = new byte[1024];
