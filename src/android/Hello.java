@@ -42,6 +42,8 @@ public class Hello extends CordovaPlugin {
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         // final Context context = ;
         assetManager = this.cordova.getActivity().getAssets();
+        String sPrinterID = "PR3";
+        String sPrinterURI = "bt://00:1D:DF:55:71:6A";
 
         try {
             debugTrace += " Reading Settings!;";
@@ -53,6 +55,9 @@ public class Hello extends CordovaPlugin {
             LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
             exSettings.setContext(this.cordova.getActivity().getApplicationContext());
             debugTrace += " Done Setting up extra setting!;";
+
+            lp = new LinePrinter(jsonCmdAttribStr, sPrinterID, sPrinterURI, exSettings);
+            debugTrace += " Created LinePrinter!;";
 
             callbackContext.success(debugTrace);
         } catch (Exception e) {
