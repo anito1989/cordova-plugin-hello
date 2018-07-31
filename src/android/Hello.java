@@ -21,8 +21,7 @@ import com.honeywell.mobility.print.LinePrinterException;
 import com.honeywell.mobility.print.PrintProgressEvent;
 import com.honeywell.mobility.print.PrintProgressListener;
 
-public class Hello extends CordovaPlugin {
-    Context context;
+public class Hello extends CordovaPlugin {  
     AssetManager assetManager;
     String debugTrace = "";
 
