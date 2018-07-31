@@ -156,14 +156,6 @@ public class Hello extends CordovaPlugin {
             try {
                 lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
                 debugTrace += " Created LinePrinter!;";
-            } catch (LinePrinterException e) {
-                StringWriter writer = new StringWriter();
-                PrintWriter printWriter = new PrintWriter(writer);
-                e.printStackTrace(printWriter);
-                String errMsg = e.getMessage();
-                String stackTrace = writer.toString();
-                printWriter.flush();
-                debugTrace += "LinePrinterException: " + errMsg + " - " + stackTrace;
 
                 // A retry sequence in case the bluetooth socket is temporarily not ready
                 int numtries = 0;
@@ -183,23 +175,31 @@ public class Hello extends CordovaPlugin {
                 debugTrace += " Connected to a printer!;";
 
                 // Check the state of the printer and abort printing if there are
-                    // any critical errors detected.
-                    int[] results = lp.getStatus();
-                    if (results != null) {
-                        for (int err = 0; err < results.length; err++) {
-                            if (results[err] == 223) {
-                                // Paper out.
-                                throw new BadPrinterStateException("Paper out");
-                            } else if (results[err] == 227) {
-                                // Lid open.
-                                throw new BadPrinterStateException("Printer lid open");
-                            }
+                // any critical errors detected.
+                int[] results = lp.getStatus();
+                if (results != null) {
+                    for (int err = 0; err < results.length; err++) {
+                        if (results[err] == 223) {
+                            // Paper out.
+                            throw new BadPrinterStateException("Paper out");
+                        } else if (results[err] == 227) {
+                            // Lid open.
+                            throw new BadPrinterStateException("Printer lid open");
                         }
                     }
+                }
 
-                    lp.write("Pavel you r awsome");
-
-            } finally {
+                lp.write("Pavel you r awsome");
+            } catch (LinePrinterException e) {
+                StringWriter writer = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(writer);
+                e.printStackTrace(printWriter);
+                String errMsg = e.getMessage();
+                String stackTrace = writer.toString();
+                printWriter.flush();
+                debugTrace += "LinePrinterException: " + errMsg + " - " + stackTrace;
+            }
+            finally {
                 if (lp != null) {
                     try {
                         lp.disconnect(); // Disconnects from the printer
