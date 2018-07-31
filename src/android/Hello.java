@@ -44,6 +44,7 @@ public class Hello extends CordovaPlugin {
         assetManager = this.cordova.getActivity().getAssets();
         String sPrinterID = "PR3";
         String sPrinterURI = "bt://00:1D:DF:55:71:6A";
+        LinePrinter lp = null;
 
         try {
             debugTrace += " Reading Settings!;";
