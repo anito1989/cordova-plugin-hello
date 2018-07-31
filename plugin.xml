@@ -1,45 +1,89 @@
-<?xml version="1.0" encoding="utf-8"?>
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-        id="com.example.hello"
-        version="0.7.0">
+package com.example.plugin;
 
-  <name>Hello</name>
+import org.apache.cordova.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
-  <engines>
-    <engine name="cordova" version=">=3.4.0"/>
-  </engines>
+import android.app.Activity;
+import android.content.res.AssetManager;
 
-  <asset src="www/hello.js" target="js/hello.js"/>
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
 
-  <js-module src="www/hello.js" name="hello">
-    <clobbers target="hello" />
-  </js-module>
 
-  <platform name="android">
+import com.honeywell.mobility.print.LinePrinter;
+import com.honeywell.mobility.print.LinePrinterException;
+import com.honeywell.mobility.print.PrintProgressEvent;
+import com.honeywell.mobility.print.PrintProgressListener;
 
-    <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="Hello">
-        <param name="android-package" value="com.example.plugin.Hello"/>
-      </feature>
-    </config-file>
-    <lib-file src="src/android/libs/hsm-android-print.jar" />
-    <source-file src="src/android/Hello.java" target-dir="src/com/example/plugin/"/>
-  </platform>
+public class Hello extends CordovaPlugin {
+    Context context;
+    AssetManager assetManager;
+    String debugTrace = "";
 
-  <platform name="ios">
-    
-    <config-file target="config.xml" parent="/widget">
-      <feature name="Hello">
-        <param name="ios-package" value="HWPHello" />
-      </feature>
-    </config-file>
+    @Override
+    public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
+        context = this.cordova.getActivity().getApplicationContext();
+        assetManager = this.cordova.getActivity().getAssets();       
 
-    <header-file src="src/ios/HWPHello.h" target-dir="HelloPlugin"/>
-    <source-file src="src/ios/HWPHello.m" target-dir="HelloPlugin"/>
-  </platform>
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
 
-  <platform name="wp7">
-    <source-file src="src/wp7/Hello.cs"/>
-  </platform>
+                try {
+                debugTrace += " Reading Settings!;";
+                String jsonCmdAttribStr = loadPrintSettings(assetManager);
+                debugTrace += " Finished reading!;";
 
-</plugin>
+
+                // Setup context
+                debugTrace += " Setting up extra setting!;";
+                LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
+                exSettings.setContext(context);
+                debugTrace += " Done Setting up extra setting!;";
+                }
+                catch (Exception e) {
+                    StringWriter writer = new StringWriter();
+                    PrintWriter printWriter = new PrintWriter(writer);
+                    e.printStackTrace(printWriter);
+                    String errMsg = e.getMessage();
+                    String stackTrace = writer.toString();
+                    printWriter.flush();
+
+                    PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace + " - " + errMsg + " - " + stackTrace);
+                    callbacks.sendPluginResult(resultB);            
+                }
+            }
+        });
+
+        PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT); 
+        pluginResult.setKeepCallback(true); // Keep callback
+
+        return true;
+    }
+
+    private String loadPrintSettings(AssetManager assetManager) {
+
+        InputStream input = null;
+        ByteArrayOutputStream output = null;
+        input = assetManager.open("www/files/printer_profiles.JSON");
+        output = new ByteArrayOutputStream(8000);
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = input.read(buf)) > 0) {
+            output.write(buf, 0, len);
+        }
+        input.close();
+        input = null;
+
+        output.flush();
+        output.close();
+        output = null;
+        return output.toString();
+    }
+
+}
