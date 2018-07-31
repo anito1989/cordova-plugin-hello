@@ -191,7 +191,7 @@ public class Hello extends CordovaPlugin {
 
                 lp.write("Pavel you r awsome");
 
-            } catch (PrinterException e) {
+            } catch (Exception e) {
                 StringWriter writer = new StringWriter();
                 PrintWriter printWriter = new PrintWriter(writer);
                 e.printStackTrace(printWriter);
