@@ -34,48 +34,45 @@ import com.honeywell.mobility.print.LinePrinterException;
 import com.honeywell.mobility.print.PrintProgressEvent;
 import com.honeywell.mobility.print.PrintProgressListener;
 
-public class Hello extends CordovaPlugin {  
+public class Hello extends CordovaPlugin {
     AssetManager assetManager;
     String debugTrace = "";
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-    //  final Context context = ;
-      assetManager = this.cordova.getActivity().getAssets();       
-
+        // final Context context = ;
+        assetManager = this.cordova.getActivity().getAssets();
 
         try {
             debugTrace += " Reading Settings!;";
             String jsonCmdAttribStr = loadPrintSettings(assetManager);
             debugTrace += " Finished reading!;";
 
-
             // Setup context
             debugTrace += " Setting up extra setting!;";
             LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
             exSettings.setContext(this.cordova.getActivity().getApplicationContext());
             debugTrace += " Done Setting up extra setting!;";
-            }
-            catch (Exception e) {
-                StringWriter writer = new StringWriter();
-                PrintWriter printWriter = new PrintWriter(writer);
-                e.printStackTrace(printWriter);
-                String errMsg = e.getMessage();
-                String stackTrace = writer.toString();
-                printWriter.flush();
-                callbackContext.error(debugTrace + " - " + errMsg + " - " + stackTrace);
-                // PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace + " - " + errMsg + " - " + stackTrace);
-                // callbacks.sendPluginResult(resultB);            
-            }
+        } catch (Exception e) {
+            StringWriter writer = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(writer);
+            e.printStackTrace(printWriter);
+            String errMsg = e.getMessage();
+            String stackTrace = writer.toString();
+            printWriter.flush();
+            callbackContext.error(debugTrace + " - " + errMsg + " - " + stackTrace);
+            // PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace
+            // + " - " + errMsg + " - " + stackTrace);
+            // callbacks.sendPluginResult(resultB);
+        }
 
         // cordova.getThreadPool().execute(new Runnable() {
-        //     public void run() {
+        // public void run() {
 
-                
-        //     }
+        // }
         // });
 
-        PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT); 
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
         pluginResult.setKeepCallback(true); // Keep callback
 
         return true;
@@ -83,22 +80,39 @@ public class Hello extends CordovaPlugin {
 
     private String loadPrintSettings(AssetManager assetManager) {
 
-        InputStream input = null;
-        ByteArrayOutputStream output = null;
-        input = assetManager.open("www/files/printer_profiles.JSON");
-        output = new ByteArrayOutputStream(8000);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = input.read(buf)) > 0) {
-            output.write(buf, 0, len);
+        try {
+            InputStream input = null;
+            ByteArrayOutputStream output = null;
+            input = assetManager.open("www/files/printer_profiles.JSON");
+            output = new ByteArrayOutputStream(8000);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = input.read(buf)) > 0) {
+                output.write(buf, 0, len);
+            }
+            input.close();
+            input = null;
+
+            output.flush();
+            output.close();
+            output = null;
+            return output.toString();
+        } catch (Exception ex) {
+            debugTrace += " Error reading asset file!";
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                    input = null;
+                }
+
+                if (output != null) {
+                    output.close();
+                    output = null;
+                }
+            } catch (IOException e) {
+                
+            }
         }
-        input.close();
-        input = null;
-
-        output.flush();
-        output.close();
-        output = null;
-        return output.toString();
     }
-
 }
