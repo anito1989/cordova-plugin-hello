@@ -189,7 +189,12 @@ public class Hello extends CordovaPlugin {
                     }
                 }
 
-                lp.write("Pavel you r awsome");
+                lp.setBold(true);
+                lp.write("ORIGINAL");
+                lp.write("Pablo coll");
+                lp.setBold(false);
+                lp.write("Slava not");           
+				lp.newLine(2);
 
             } catch (Exception e) {
                 StringWriter writer = new StringWriter();
