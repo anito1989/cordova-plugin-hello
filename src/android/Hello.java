@@ -25,6 +25,10 @@ import org.apache.cordova.*;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.honeywell.mobility.print.LinePrinter;
 import com.honeywell.mobility.print.LinePrinterException;
 import com.honeywell.mobility.print.PrintProgressEvent;
