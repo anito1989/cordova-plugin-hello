@@ -72,7 +72,7 @@ public class Hello extends CordovaPlugin {
         // }
         // });
 
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.Ok, debugTrace);
         pluginResult.setKeepCallback(true); // Keep callback
 
         return true;
@@ -82,6 +82,7 @@ public class Hello extends CordovaPlugin {
 
         InputStream input = null;
         ByteArrayOutputStream output = null;
+        String resp;
         
         try {           
             input = assetManager.open("www/files/printer_profiles.JSON");
@@ -96,6 +97,7 @@ public class Hello extends CordovaPlugin {
 
             output.flush();
             output.close();
+            resp = output.toString();
             output = null;
            
         } catch (Exception ex) {
@@ -115,6 +117,6 @@ public class Hello extends CordovaPlugin {
                 
             }
         }
-        return output.toString();
+       return resp;
     }
 }
