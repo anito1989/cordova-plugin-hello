@@ -165,7 +165,7 @@ public class Hello extends CordovaPlugin {
                     try {
                         lp.connect(); // Connects to the printer
                         break;
-                    } catch (LinePrinterException ex) {
+                    } catch (PrinterException ex) {
                         numtries++;
                         Thread.sleep(1000);
                     }
@@ -190,7 +190,8 @@ public class Hello extends CordovaPlugin {
                 }
 
                 lp.write("Pavel you r awsome");
-            } catch (LinePrinterException e) {
+
+            } catch (PrinterException e) {
                 StringWriter writer = new StringWriter();
                 PrintWriter printWriter = new PrintWriter(writer);
                 e.printStackTrace(printWriter);
