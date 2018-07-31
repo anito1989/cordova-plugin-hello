@@ -27,37 +27,40 @@ public class Hello extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
-       final Context context = this.cordova.getActivity().getApplicationContext();
+       Context context = this.cordova.getActivity().getApplicationContext();
         assetManager = this.cordova.getActivity().getAssets();       
 
-        cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
 
-                try {
-                debugTrace += " Reading Settings!;";
-                String jsonCmdAttribStr = loadPrintSettings(assetManager);
-                debugTrace += " Finished reading!;";
+        try {
+            debugTrace += " Reading Settings!;";
+            String jsonCmdAttribStr = loadPrintSettings(assetManager);
+            debugTrace += " Finished reading!;";
 
 
-                // Setup context
-                debugTrace += " Setting up extra setting!;";
-                LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
-                exSettings.setContext(context);
-                debugTrace += " Done Setting up extra setting!;";
-                }
-                catch (Exception e) {
-                    StringWriter writer = new StringWriter();
-                    PrintWriter printWriter = new PrintWriter(writer);
-                    e.printStackTrace(printWriter);
-                    String errMsg = e.getMessage();
-                    String stackTrace = writer.toString();
-                    printWriter.flush();
-
-                    PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace + " - " + errMsg + " - " + stackTrace);
-                    callbacks.sendPluginResult(resultB);            
-                }
+            // Setup context
+            debugTrace += " Setting up extra setting!;";
+            LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
+            exSettings.setContext(context);
+            debugTrace += " Done Setting up extra setting!;";
             }
-        });
+            catch (Exception e) {
+                StringWriter writer = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(writer);
+                e.printStackTrace(printWriter);
+                String errMsg = e.getMessage();
+                String stackTrace = writer.toString();
+                printWriter.flush();
+
+                PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace + " - " + errMsg + " - " + stackTrace);
+                callbacks.sendPluginResult(resultB);            
+            }
+
+        // cordova.getThreadPool().execute(new Runnable() {
+        //     public void run() {
+
+                
+        //     }
+        // });
 
         PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT); 
         pluginResult.setKeepCallback(true); // Keep callback
