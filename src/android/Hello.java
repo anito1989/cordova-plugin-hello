@@ -57,8 +57,8 @@ public class Hello extends CordovaPlugin {
             exSettings.setContext(this.cordova.getActivity().getApplicationContext());
             debugTrace += " Done Setting up extra setting!;";
 
-            lp = new LinePrinter(jsonCmdAttribStr, sPrinterID, sPrinterURI, exSettings);
-            debugTrace += " Created LinePrinter!;";
+            PrintTask task = new PrintTask(jsonCmdAttribStr, sPrinterID, sPrinterURI, exSettings);
+            task.execute("go go go");
 
             callbackContext.success(debugTrace);
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class Hello extends CordovaPlugin {
 
         // }
         // });
-       
+
         return true;
     }
 
@@ -88,8 +88,8 @@ public class Hello extends CordovaPlugin {
         InputStream input = null;
         ByteArrayOutputStream output = null;
         String resp = "";
-        
-        try {           
+
+        try {
             input = assetManager.open("www/files/printer_profiles.JSON");
             output = new ByteArrayOutputStream(8000);
             byte[] buf = new byte[1024];
@@ -104,7 +104,7 @@ public class Hello extends CordovaPlugin {
             output.close();
             resp = output.toString();
             output = null;
-           
+
         } catch (Exception ex) {
             debugTrace += " Error reading asset file!";
         } finally {
@@ -119,9 +119,51 @@ public class Hello extends CordovaPlugin {
                     output = null;
                 }
             } catch (IOException e) {
-                
+
             }
         }
-       return resp;
+        return resp;
+    }
+
+    public class PrintTask extends AsyncTask<String, Integer, String> {
+
+        String _jsonCmdAttribStr;
+        String _sPrinterID;
+        String _sPrinterURI;
+        LinePrinter.ExtraSettings _exSettings;
+
+        public PrintTask(String jsonCmdAttribStr, String sPrinterID, String sPrinterURI,
+                LinePrinter.ExtraSettings exSettings) {
+            super();
+            _jsonCmdAttribStr = jsonCmdAttribStr;
+            _sPrinterID = sPrinterID;
+            _sPrinterURI = sPrinterURI;
+            _exSettings = exSettings;
+        }
+
+        /**
+         * Runs on the UI thread before doInBackground(Params...).
+         */
+        @Override
+        protected String doInBackground(String... args) {
+
+            lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
+            debugTrace += " Created LinePrinter!;";
+            return "good";
+        }
+
+        /**
+         * Runs on the UI thread after doInBackground method. The specified result
+         * parameter is the value returned by doInBackground.
+         */
+        @Override
+        protected void onPostExecute(String result) {
+
+            // Displays the result (number of bytes sent to the printer or
+            // exception message) in the Progress and Status text box.
+            if (result != null) {
+            }
+        }
+
     }
 }
