@@ -43,10 +43,17 @@ public class Hello extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         // final Context context = ;
+        if (action.equals("clearDebugTrace")) {
+            debugTrace = "";
+            return true;
+        } else if (action.equals("getDebugTrace")) {
+            callbackContext.success(debugTrace);
+            return true;
+        }
+
         assetManager = this.cordova.getActivity().getAssets();
         String sPrinterID = "PR3";
         String sPrinterURI = "bt://00:1D:DF:55:71:6A";
-        LinePrinter lp = null;
 
         try {
             debugTrace += " Reading Settings!;";
@@ -149,27 +156,27 @@ public class Hello extends CordovaPlugin {
         @Override
         protected String doInBackground(String... args) {
             LinePrinter lp = null;
-            try{
+            try {
                 lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
                 debugTrace += " Created LinePrinter!;";
+            } catch (LinePrinterException e) {
+                StringWriter writer = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(writer);
+                e.printStackTrace(printWriter);
+                String errMsg = e.getMessage();
+                String stackTrace = writer.toString();
+                printWriter.flush();
+                debugTrace += "LinePrinterException: " +errMsg + " - " + stackTrace ;
+            } finally {
+                if (lp != null) {
+                    try {
+                        lp.disconnect(); // Disconnects from the printer
+                        lp.close(); // Releases resources
+                    } catch (Exception ex) {
+                    }
+                }
             }
-            catch (LinePrinterException ex)
-			{
-				debugTrace += "LinePrinterException: " + ex.getMessage();
-			}            
-            finally
-			{
-				if (lp != null)
-				{
-					try
-					{
-						lp.disconnect();  // Disconnects from the printer
-						lp.close();  // Releases resources
-					}
-					catch (Exception ex) {}
-				}
-			}
-          
+
             return "good";
         }
 
