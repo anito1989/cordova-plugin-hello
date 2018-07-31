@@ -13,11 +13,13 @@ import java.util.UUID;
 import java.io.ByteArrayOutputStream;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.AsyncTask;
 import android.content.res.AssetManager;
 import android.content.Intent;
-
 import android.util.Xml.Encoding;
 import android.util.Base64;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +149,7 @@ public class Hello extends CordovaPlugin {
         @Override
         protected String doInBackground(String... args) {
 
-            lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
+            LinePrinter lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
             debugTrace += " Created LinePrinter!;";
             return "good";
         }
