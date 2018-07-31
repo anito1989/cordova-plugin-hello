@@ -11,9 +11,16 @@ import java.io.PrintWriter;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
+import android.content.Intent;
+
+import android.util.Xml.Encoding;
+import android.util.Base64;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+
 
 
 import com.honeywell.mobility.print.LinePrinter;
@@ -51,8 +58,8 @@ public class Hello extends CordovaPlugin {
                 String stackTrace = writer.toString();
                 printWriter.flush();
 
-                PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace + " - " + errMsg + " - " + stackTrace);
-                callbacks.sendPluginResult(resultB);            
+                // PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace + " - " + errMsg + " - " + stackTrace);
+                // callbacks.sendPluginResult(resultB);            
             }
 
         // cordova.getThreadPool().execute(new Runnable() {
