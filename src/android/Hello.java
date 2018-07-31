@@ -148,9 +148,28 @@ public class Hello extends CordovaPlugin {
          */
         @Override
         protected String doInBackground(String... args) {
-
-            LinePrinter lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
-            debugTrace += " Created LinePrinter!;";
+            LinePrinter lp = null;
+            try{
+                lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
+                debugTrace += " Created LinePrinter!;";
+            }
+            catch (LinePrinterException ex)
+			{
+				debugTrace += "LinePrinterException: " + ex.getMessage();
+			}            
+            finally
+			{
+				if (lp != null)
+				{
+					try
+					{
+						lp.disconnect();  // Disconnects from the printer
+						lp.close();  // Releases resources
+					}
+					catch (Exception ex) {}
+				}
+			}
+          
             return "good";
         }
 
