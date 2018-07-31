@@ -71,10 +71,7 @@ public class Hello extends CordovaPlugin {
 
         // }
         // });
-
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.Ok);
-        pluginResult.setKeepCallback(true); // Keep callback
-
+       
         return true;
     }
 
