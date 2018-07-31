@@ -97,7 +97,7 @@ public class Hello extends CordovaPlugin {
             output.flush();
             output.close();
             output = null;
-            return output.toString();
+           
         } catch (Exception ex) {
             debugTrace += " Error reading asset file!";
         } finally {
@@ -115,5 +115,6 @@ public class Hello extends CordovaPlugin {
                 
             }
         }
+        return output.toString();
     }
 }
