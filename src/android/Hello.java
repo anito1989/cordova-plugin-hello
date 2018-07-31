@@ -163,7 +163,42 @@ public class Hello extends CordovaPlugin {
                 String errMsg = e.getMessage();
                 String stackTrace = writer.toString();
                 printWriter.flush();
-                debugTrace += "LinePrinterException: " +errMsg + " - " + stackTrace ;
+                debugTrace += "LinePrinterException: " + errMsg + " - " + stackTrace;
+
+                // A retry sequence in case the bluetooth socket is temporarily not ready
+                int numtries = 0;
+                int maxretry = 2;
+                while (numtries < maxretry) {
+                    debugTrace += " Coonect LinePrinter! ;";
+                    try {
+                        lp.connect(); // Connects to the printer
+                        break;
+                    } catch (LinePrinterException ex) {
+                        numtries++;
+                        Thread.sleep(1000);
+                    }
+                }
+                if (numtries == maxretry)
+                    lp.connect();// Final retry
+                debugTrace += " Connected to a printer!;";
+
+                // Check the state of the printer and abort printing if there are
+                    // any critical errors detected.
+                    int[] results = lp.getStatus();
+                    if (results != null) {
+                        for (int err = 0; err < results.length; err++) {
+                            if (results[err] == 223) {
+                                // Paper out.
+                                throw new BadPrinterStateException("Paper out");
+                            } else if (results[err] == 227) {
+                                // Lid open.
+                                throw new BadPrinterStateException("Printer lid open");
+                            }
+                        }
+                    }
+
+                    lp.write("Pavel you r awsome");
+
             } finally {
                 if (lp != null) {
                     try {
