@@ -53,6 +53,8 @@ public class Hello extends CordovaPlugin {
             LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
             exSettings.setContext(this.cordova.getActivity().getApplicationContext());
             debugTrace += " Done Setting up extra setting!;";
+
+            callbackContext.success(debugTrace);
         } catch (Exception e) {
             StringWriter writer = new StringWriter();
             PrintWriter printWriter = new PrintWriter(writer);
