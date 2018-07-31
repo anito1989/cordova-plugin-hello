@@ -79,7 +79,7 @@ public class Hello extends CordovaPlugin {
 
         InputStream input = null;
         ByteArrayOutputStream output = null;
-        String resp;
+        String resp = "";
         
         try {           
             input = assetManager.open("www/files/printer_profiles.JSON");
