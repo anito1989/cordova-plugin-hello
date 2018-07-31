@@ -226,4 +226,13 @@ public class Hello extends CordovaPlugin {
         }
 
     }
+
+    public class BadPrinterStateException extends Exception {
+
+        static final long serialVersionUID = 1;
+
+        public BadPrinterStateException(String message) {
+            super(message);
+        }
+    }
 }
