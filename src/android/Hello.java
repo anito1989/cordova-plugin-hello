@@ -155,7 +155,7 @@ public class Hello extends CordovaPlugin {
                 int numtries = 0;
                 int maxretry = 2;
                 while (numtries < maxretry) {
-                    debugTrace += " Coonect LinePrinter! ;";
+                    debugTrace = "Coonect LinePrinter!;";
                     try {
                         lp.connect(); // Connects to the printer
                         break;
@@ -166,7 +166,7 @@ public class Hello extends CordovaPlugin {
                 }
                 if (numtries == maxretry)
                     lp.connect();// Final retry
-                debugTrace += " Connected to a printer!;";
+                debugTrace = "Connected to a printer!;";
 
                 // Check the state of the printer and abort printing if there are
                 // any critical errors detected.
@@ -229,16 +229,16 @@ public class Hello extends CordovaPlugin {
 
         // Setup context
 
-        debugTrace += " Setting up extra setting!;";
+        debugTrace = "Setting up extra setting!;";
         LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
         exSettings.setContext(this.cordova.getActivity().getApplicationContext());
-        debugTrace += " Done Setting up extra setting!;";
+        debugTrace = "Done Setting up extra setting!;";
 
         AssetManager assetManager = this.cordova.getActivity().getAssets();
 
-        debugTrace += " Reading Settings!;";
+        debugTrace = "Reading Settings!;";
         String jsonCmdAttribStr = loadPrintSettings(assetManager);
-        debugTrace += " Finished reading!;";
+        debugTrace = "Finished reading!;";
         String sPrinterURI = "bt://" + mac;
 
         try {
@@ -247,7 +247,7 @@ public class Hello extends CordovaPlugin {
             debugTrace += " - " + exToString(e);
         }
 
-        debugTrace += " Created LinePrinter!;";
+        debugTrace = "Created LinePrinter!;";
     }
 
     private boolean clearIntermecPrintersEnvironment() {
