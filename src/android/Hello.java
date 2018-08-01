@@ -11,8 +11,6 @@ import java.util.Hashtable;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.lang.model.util.ElementScanner6;
-
 import java.io.ByteArrayOutputStream;
 
 import android.app.Activity;
@@ -44,38 +42,33 @@ public class Hello extends CordovaPlugin {
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         // final Context context = ;
         try {
-            switch (action) {
-            case "write":
+            
+            if(action.equals("write")){ 
                 lp.write(data.getString(1));
                 callbackContext.success();
-                break;
-            case "newLine":
+             }else if(action.equals("newLine")){
                 lp.newLine(data.getInt(1));
                 callbackContext.success();
-                break;
-                case "formFeed":
+             }else if(action.equals("formFeed")){
                 lp.formFeed();
                 callbackContext.success();
-                break;
-            case "getStatus":
-                if (lp = null) {
+             }else if(action.equals("getStatus")){
+                if (lp == null) {
                     callbackContext.error("No printer object exist!");
                 }
                 try {
                     int[] status = lp.getStatus();
-                    callbackContext.error(status);
+                    callbackContext.success("To do responce");
                 } catch (Exception e) {
                     callbackContext.error("Not connected!");
-                }                
-                break;
-            case "close":
+                }     
+             }else if(action.equals("close")){
                 if (clearIntermecPrintersEnvironment()) {
                     callbackContext.success();
                 } else {
                     callbackContext.error(debugTrace);
-                }                
-                break;
-            case "connect":
+                }      
+             }else if(action.equals("close")){
                 ConnectTask task = new ConnectTask();
 
                 if (lp != null) {
@@ -93,17 +86,13 @@ public class Hello extends CordovaPlugin {
 
                 setIntermecPrintersEnvironment(data.getString(0), data.getString(2));
 
-                task.execute();                
-                break;
-            case "clearDebugTrace":
-                debugTrace = "";                
-                break;
-            case "getDebugTrace":
-            default:
+                task.execute();  
+             }else if(action.equals("clearDebugTrace")){
+                debugTrace = ""; 
+             }
+             else{
                 callbackContext.success(debugTrace);
-                break;
-            }
-
+             }
         } catch (Exception e) {
             callbackContext.error(debugTrace + " - " + exToString(e));
         }
@@ -215,7 +204,7 @@ public class Hello extends CordovaPlugin {
 
     }
 
-    private String processMacAdress(string paramMac) {
+    private String processMacAdress(String paramMac) {
         if (paramMac.contains(":") == false && paramMac.length() == 12) {
             // If the MAC address only contains hex digits without the
             // ":" delimiter, then add ":" to the MAC address string.
@@ -251,7 +240,7 @@ public class Hello extends CordovaPlugin {
         debugTrace += " Finished reading!;";
 
         try {
-            lp = new LinePrinter(_jsonCmdAttribStr, id, mac, _exSettings);
+            lp = new LinePrinter(jsonCmdAttribStr, id, mac, exSettings);
         } catch (Exception e) {
             debugTrace += " - " + exToString(e);
         }
