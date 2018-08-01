@@ -10,6 +10,9 @@ import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.lang.model.util.ElementScanner6;
+
 import java.io.ByteArrayOutputStream;
 
 import android.app.Activity;
@@ -34,65 +37,76 @@ import org.json.JSONObject;
 import com.honeywell.mobility.print.*;
 
 public class Hello extends CordovaPlugin {
-    AssetManager assetManager;
     String debugTrace = "";
     LinePrinter lp = null;
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         // final Context context = ;
-        if (action.equals("clearDebugTrace")) {
-            debugTrace = "";
-            return true;
-        } else if (action.equals("getDebugTrace")) {
-            callbackContext.success(debugTrace);
-            return true;
-        }
-
-        assetManager = this.cordova.getActivity().getAssets();
-        String sPrinterID = "PR3";
-        String sPrinterURI = "bt://00:1D:DF:55:71:6A";
-
         try {
-            debugTrace += " Reading Settings!;";
-            String jsonCmdAttribStr = loadPrintSettings(assetManager);
-            debugTrace += " Finished reading!;";
+            switch (action) {
+            case "write":
+                lp.write(data.getString(1));
+                callbackContext.success();
+                break;
+            case "newLine":
+                lp.newLine(data.getInt(1));
+                callbackContext.success();
+                break;
+                case "formFeed":
+                lp.formFeed();
+                callbackContext.success();
+                break;
+            case "getStatus":
+                if (lp = null) {
+                    callbackContext.error("No printer object exist!");
+                }
+                try {
+                    int[] status = lp.getStatus();
+                    callbackContext.error(status);
+                } catch (Exception e) {
+                    callbackContext.error("Not connected!");
+                }                
+                break;
+            case "close":
+                if (clearIntermecPrintersEnvironment()) {
+                    callbackContext.success();
+                } else {
+                    callbackContext.error(debugTrace);
+                }                
+                break;
+            case "connect":
+                ConnectTask task = new ConnectTask();
 
-            // Setup context
-            debugTrace += " Setting up extra setting!;";
-            LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
-            exSettings.setContext(this.cordova.getActivity().getApplicationContext());
-            debugTrace += " Done Setting up extra setting!;";
+                if (lp != null) {
+                    task.execute();
+                    break;                  
+                }
 
-            String param = data.getString(0);
-            PrintTask task = new PrintTask(jsonCmdAttribStr, sPrinterID, sPrinterURI, exSettings);
-            if(param != null){
-                task.execute(param); 
+                if (data.getString(0) == null) {
+                    callbackContext.error("Printer name is requred as a string prameter!");
+                }
+
+                if (data.getString(1) == null) {
+                    callbackContext.error("Mac id is requred as a string prameter!");
+                }
+
+                setIntermecPrintersEnvironment(data.getString(0), data.getString(2));
+
+                task.execute();                
+                break;
+            case "clearDebugTrace":
+                debugTrace = "";                
+                break;
+            case "getDebugTrace":
+            default:
+                callbackContext.success(debugTrace);
+                break;
             }
-            else{
-                task.execute();
-            }
-            
 
-            callbackContext.success(debugTrace);
         } catch (Exception e) {
-            StringWriter writer = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(writer);
-            e.printStackTrace(printWriter);
-            String errMsg = e.getMessage();
-            String stackTrace = writer.toString();
-            printWriter.flush();
-            callbackContext.error(debugTrace + " - " + errMsg + " - " + stackTrace);
-            // PluginResult resultB = new PluginResult(PluginResult.Status.Error, debugTrace
-            // + " - " + errMsg + " - " + stackTrace);
-            // callbacks.sendPluginResult(resultB);
+            callbackContext.error(debugTrace + " - " + exToString(e));
         }
-
-        // cordova.getThreadPool().execute(new Runnable() {
-        // public void run() {
-
-        // }
-        // });
 
         return true;
     }
@@ -139,32 +153,13 @@ public class Hello extends CordovaPlugin {
         return resp;
     }
 
-    public class PrintTask extends AsyncTask<String, Integer, String> {
-
-        String _jsonCmdAttribStr;
-        String _sPrinterID;
-        String _sPrinterURI;
-        LinePrinter.ExtraSettings _exSettings;
-
-        public PrintTask(String jsonCmdAttribStr, String sPrinterID, String sPrinterURI,
-                LinePrinter.ExtraSettings exSettings) {
-            super();
-            _jsonCmdAttribStr = jsonCmdAttribStr;
-            _sPrinterID = sPrinterID;
-            _sPrinterURI = sPrinterURI;
-            _exSettings = exSettings;
-        }
-
+    public class ConnectTask extends AsyncTask<String, Integer, String> {
         /**
          * Runs on the UI thread before doInBackground(Params...).
          */
         @Override
-        protected String doInBackground(String... args) {          
+        protected String doInBackground(String... args) {
             try {
-                lp = new LinePrinter(_jsonCmdAttribStr, _sPrinterID, _sPrinterURI, _exSettings);
-                debugTrace += " Created LinePrinter!;";
-
-                String image = args[0];
 
                 // A retry sequence in case the bluetooth socket is temporarily not ready
                 int numtries = 0;
@@ -198,63 +193,16 @@ public class Hello extends CordovaPlugin {
                     }
                 }
 
-                lp.setBold(true);
-                lp.write("ORIGINAL");
-                lp.newLine(1);
-                lp.write("Pablo coll");
-                lp.newLine(1);
-                lp.setBold(false);
-                lp.write("Slava not");           
-                lp.newLine(2);
-                
-                if (image != null)
-				{
-					lp.writeGraphicBase64(image,
-							LinePrinter.GraphicRotationDegrees.DEGREE_0,
-							72,   // Offset in printhead dots from the left of the page
-							220,  // Desired graphic width on paper in printhead dots
-							100); // Desired graphic height on paper in printhead dots
-				}
-
-                lp.formFeed();
-                lp.disconnect(); // Disconnects from the printer
-                lp.close(); // Releases resources
-
             } catch (Exception e) {
-                StringWriter writer = new StringWriter();
-                PrintWriter printWriter = new PrintWriter(writer);
-                e.printStackTrace(printWriter);
-                String errMsg = e.getMessage();
-                String stackTrace = writer.toString();
-                printWriter.flush();
-                debugTrace += "LinePrinterException: " + errMsg + " - " + stackTrace;
-            }
-            finally {
+                debugTrace += "LinePrinterException: " + exToString(e);
+            } finally {
                 if (lp != null) {
-                    try {
-                        lp.disconnect(); // Disconnects from the printer
-                        lp.close(); // Releases resources
-                    } catch (Exception ex) {
-                    }
+                    clearIntermecPrintersEnvironment();
                 }
             }
 
             return "good";
         }
-
-        /**
-         * Runs on the UI thread after doInBackground method. The specified result
-         * parameter is the value returned by doInBackground.
-         */
-        @Override
-        protected void onPostExecute(String result) {
-
-            // Displays the result (number of bytes sent to the printer or
-            // exception message) in the Progress and Status text box.
-            if (result != null) {
-            }
-        }
-
     }
 
     public class BadPrinterStateException extends Exception {
@@ -264,5 +212,73 @@ public class Hello extends CordovaPlugin {
         public BadPrinterStateException(String message) {
             super(message);
         }
+
     }
+
+    private String processMacAdress(string paramMac) {
+        if (paramMac.contains(":") == false && paramMac.length() == 12) {
+            // If the MAC address only contains hex digits without the
+            // ":" delimiter, then add ":" to the MAC address string.
+            char[] cAddr = new char[17];
+
+            for (int i = 0, j = 0; i < 12; i += 2) {
+                paramMac.getChars(i, i + 2, cAddr, j);
+                j += 2;
+                if (j < 17) {
+                    cAddr[j++] = ':';
+                }
+            }
+
+            return new String(cAddr);
+        }
+    }
+
+    private void setIntermecPrintersEnvironment(String id, String mac) {
+
+        mac = processMacAdress(mac);
+
+        // Setup context
+
+        debugTrace += " Setting up extra setting!;";
+        LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
+        exSettings.setContext(this.cordova.getActivity().getApplicationContext());
+        debugTrace += " Done Setting up extra setting!;";
+
+        AssetManager assetManager = this.cordova.getActivity().getAssets();
+
+        debugTrace += " Reading Settings!;";
+        String jsonCmdAttribStr = loadPrintSettings(assetManager);
+        debugTrace += " Finished reading!;";
+
+        try {
+            lp = new LinePrinter(_jsonCmdAttribStr, id, mac, _exSettings);
+        } catch (Exception e) {
+            debugTrace += " - " + exToString(e);
+        }
+
+        debugTrace += " Created LinePrinter!;";
+    }
+
+    private boolean clearIntermecPrintersEnvironment() {
+        try {
+            lp.disconnect(); // Disconnects from the printer
+            lp.close(); // Releases resources
+            lp = null;
+            return true;
+        } catch (Exception ex) {
+            debugTrace += "LinePrinterException: " + exToString(e);
+            return false;
+        }
+    }
+
+    private String exToString(Exception e) {
+        StringWriter writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        e.printStackTrace(printWriter);
+        String errMsg = e.getMessage();
+        String stackTrace = writer.toString();
+        printWriter.flush();
+        return errMsg + " - " + stackTrace;
+    }
+
 }
