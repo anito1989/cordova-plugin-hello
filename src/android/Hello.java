@@ -44,10 +44,10 @@ public class Hello extends CordovaPlugin {
         try {
             
             if(action.equals("write")){ 
-                lp.write(data.getString(1));
+                lp.write(data.getString(0));
                 callbackContext.success();
              }else if(action.equals("newLine")){
-                lp.newLine(data.getInt(1));
+                lp.newLine(data.getInt(0));
                 callbackContext.success();
              }else if(action.equals("formFeed")){
                 lp.formFeed();
