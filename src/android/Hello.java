@@ -185,12 +185,10 @@ public class Hello extends CordovaPlugin {
 
             } catch (Exception e) {
                 debugTrace += "LinePrinterException: " + exToString(e);
-            } finally {
                 if (lp != null) {
                     clearIntermecPrintersEnvironment();
                 }
-            }
-
+            } 
             return "good";
         }
     }
