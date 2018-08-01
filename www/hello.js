@@ -19,16 +19,16 @@ module.exports = {
         cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [imageString]);
     },
     setBold: function (boolean, successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [boolean]);
+        cordova.exec(successCallback, errorCallback, "Hello", "setBold", [boolean]);
     },
     write: function (string, successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [string]);
+        cordova.exec(successCallback, errorCallback, "Hello", "write", [string]);
     },
     newLine: function (numberOfLines, successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [numberOfLines]);
+        cordova.exec(successCallback, errorCallback, "Hello", "newLine", [numberOfLines]);
     },
     formFeed: function (successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [null]);
+        cordova.exec(successCallback, errorCallback, "Hello", "formFeed", [null]);
     },
 
 
