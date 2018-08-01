@@ -241,9 +241,10 @@ public class Hello extends CordovaPlugin {
         debugTrace += " Reading Settings!;";
         String jsonCmdAttribStr = loadPrintSettings(assetManager);
         debugTrace += " Finished reading!;";
+        String sPrinterURI = "bt://" + mac;
 
         try {
-            lp = new LinePrinter(jsonCmdAttribStr, id, mac, exSettings);
+            lp = new LinePrinter(jsonCmdAttribStr, id, sPrinterURI, exSettings);
         } catch (Exception e) {
             debugTrace += " - " + exToString(e);
         }
