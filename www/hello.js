@@ -7,11 +7,11 @@ module.exports = {
     },
 
     close: function (successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "close");
+        cordova.exec(successCallback, errorCallback, "Hello", "close", [null]);
     },
 
     getStatus: function (successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "getStatus");
+        cordova.exec(successCallback, errorCallback, "Hello", "getStatus",[null]);
     },
 
     //General commands
@@ -28,7 +28,7 @@ module.exports = {
         cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [numberOfLines]);
     },
     formFeed: function (successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64");
+        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [null]);
     },
 
 
