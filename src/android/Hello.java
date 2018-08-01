@@ -219,6 +219,8 @@ public class Hello extends CordovaPlugin {
 
             return new String(cAddr);
         }
+
+        return paramMac;
     }
 
     private void setIntermecPrintersEnvironment(String id, String mac) {
