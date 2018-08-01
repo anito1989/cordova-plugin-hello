@@ -85,7 +85,7 @@ public class Hello extends CordovaPlugin {
                     callbackContext.error("Mac id is requred as a string prameter!");
                 }
 
-                setIntermecPrintersEnvironment(data.getString(0), data.getString(2));
+                setIntermecPrintersEnvironment(data.getString(0), data.getString(1));
 
                 task.execute();  
              }else if(action.equals("clearDebugTrace")){
