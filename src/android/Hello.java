@@ -72,8 +72,7 @@ public class Hello extends CordovaPlugin {
                 ConnectTask task = new ConnectTask();
 
                 if (lp != null) {
-                    task.execute();
-                    break;                  
+                    task.execute();                                  
                 }
 
                 if (data.getString(0) == null) {
@@ -254,7 +253,7 @@ public class Hello extends CordovaPlugin {
             lp.close(); // Releases resources
             lp = null;
             return true;
-        } catch (Exception ex) {
+        } catch (Exception e) {
             debugTrace += "LinePrinterException: " + exToString(e);
             return false;
         }
