@@ -42,17 +42,17 @@ public class Hello extends CordovaPlugin {
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
         // final Context context = ;
         try {
-            
-            if(action.equals("write")){ 
+
+            if (action.equals("write")) {
                 lp.write(data.getString(0));
                 callbackContext.success();
-             }else if(action.equals("newLine")){
+            } else if (action.equals("newLine")) {
                 lp.newLine(data.getInt(0));
                 callbackContext.success();
-             }else if(action.equals("formFeed")){
+            } else if (action.equals("formFeed")) {
                 lp.formFeed();
                 callbackContext.success();
-             }else if(action.equals("getStatus")){
+            } else if (action.equals("getStatus")) {
                 if (lp == null) {
                     callbackContext.error("No printer object exist!");
                 }
@@ -61,21 +61,16 @@ public class Hello extends CordovaPlugin {
                     callbackContext.success("To do responce");
                 } catch (Exception e) {
                     callbackContext.error("Not connected!");
-                }     
-             }else if(action.equals("close")){
+                }
+            } else if (action.equals("close")) {
                 if (clearIntermecPrintersEnvironment()) {
                     callbackContext.success();
                 } else {
                     callbackContext.error(debugTrace);
-                }      
-             }else if(action.equals("connect")){
-
-                debugTrace = "Start connect!"; 
-                ConnectTask task = new ConnectTask();
-
-                if (lp != null) {
-                    task.execute();                                  
                 }
+            } else if (action.equals("connect")) {
+
+                debugTrace = "Start connect!";
 
                 if (data.getString(0) == null) {
                     callbackContext.error("Printer name is requred as a string prameter!");
@@ -85,15 +80,23 @@ public class Hello extends CordovaPlugin {
                     callbackContext.error("Mac id is requred as a string prameter!");
                 }
 
-                setIntermecPrintersEnvironment(data.getString(0), data.getString(1));
+                if (lp == null) {
+                    setIntermecPrintersEnvironment(data.getString(0), data.getString(1));
+                }
 
-                task.execute();  
-             }else if(action.equals("clearDebugTrace")){
-                debugTrace = ""; 
-             }
-             else{
+                if (TryToConnect) {
+                    callbackContext.success();
+                } else {
+                    callbackContext.error();
+                }
+
+                // ConnectTask task = new ConnectTask();
+                // task.execute();
+            } else if (action.equals("clearDebugTrace")) {
+                debugTrace = "";
+            } else {
                 callbackContext.success(debugTrace);
-             }
+            }
         } catch (Exception e) {
             callbackContext.error(debugTrace + " - " + exToString(e));
         }
@@ -149,46 +152,7 @@ public class Hello extends CordovaPlugin {
          */
         @Override
         protected String doInBackground(String... args) {
-            try {
 
-                // A retry sequence in case the bluetooth socket is temporarily not ready
-                int numtries = 0;
-                int maxretry = 2;
-                while (numtries < maxretry) {
-                    debugTrace = "Coonect LinePrinter!;";
-                    try {
-                        lp.connect(); // Connects to the printer
-                        break;
-                    } catch (PrinterException ex) {
-                        numtries++;
-                        Thread.sleep(1000);
-                    }
-                }
-                if (numtries == maxretry)
-                    lp.connect();// Final retry
-                debugTrace = "Connected to a printer!;";
-
-                // Check the state of the printer and abort printing if there are
-                // any critical errors detected.
-                int[] results = lp.getStatus();
-                if (results != null) {
-                    for (int err = 0; err < results.length; err++) {
-                        if (results[err] == 223) {
-                            // Paper out.
-                            throw new BadPrinterStateException("Paper out");
-                        } else if (results[err] == 227) {
-                            // Lid open.
-                            throw new BadPrinterStateException("Printer lid open");
-                        }
-                    }
-                }
-
-            } catch (Exception e) {
-                debugTrace += "LinePrinterException: " + exToString(e);
-                if (lp != null) {
-                    clearIntermecPrintersEnvironment();
-                }
-            } 
             return "good";
         }
     }
@@ -272,4 +236,48 @@ public class Hello extends CordovaPlugin {
         return errMsg + " - " + stackTrace;
     }
 
+    private boolean TryToConnect() {
+        try {
+            // A retry sequence in case the bluetooth socket is temporarily not ready
+            int numtries = 0;
+            int maxretry = 2;
+            while (numtries < maxretry) {
+                debugTrace = "Coonect LinePrinter!;";
+                try {
+                    lp.connect(); // Connects to the printer
+                    break;
+                } catch (PrinterException ex) {
+                    numtries++;
+                    Thread.sleep(1000);
+                }
+            }
+            if (numtries == maxretry)
+                lp.connect();// Final retry
+            debugTrace = "Connected to a printer!;";
+
+            // Check the state of the printer and abort printing if there are
+            // any critical errors detected.
+            int[] results = lp.getStatus();
+            if (results != null) {
+                for (int err = 0; err < results.length; err++) {
+                    if (results[err] == 223) {
+                        // Paper out.
+                        throw new BadPrinterStateException("Paper out");
+                    } else if (results[err] == 227) {
+                        // Lid open.
+                        throw new BadPrinterStateException("Printer lid open");
+                    }
+                }
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            debugTrace += "LinePrinterException: " + exToString(e);
+            if (lp != null) {
+                clearIntermecPrintersEnvironment();
+            }
+            return false;
+        }
+    }
 }
