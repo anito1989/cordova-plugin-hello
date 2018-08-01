@@ -64,7 +64,7 @@ public class Hello extends CordovaPlugin {
             exSettings.setContext(this.cordova.getActivity().getApplicationContext());
             debugTrace += " Done Setting up extra setting!;";
 
-            String param = args.getString(0);
+            String param = data.getString(0);
             PrintTask task = new PrintTask(jsonCmdAttribStr, sPrinterID, sPrinterURI, exSettings);
             if(param != null){
                 task.execute(param); 
