@@ -11,15 +11,34 @@ module.exports = {
     },
 
     getStatus: function (successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "getStatus",[null]);
+        cordova.exec(successCallback, errorCallback, "Hello", "getStatus", [null]);
     },
 
     //General commands
-    printGraphicBase64: function (imageString, successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [imageString]);
+    printGraphicBase64: function (imageString, offsetNumber, widthNumber, heightNumber, rotationNumberOptional, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Hello", "printGraphicBase64", [imageString,offsetNumber, widthNumber, heightNumber, rotationNumberOptional]);
+    },
+    //General commands
+    writeBarcode: function (symbologyNumber, dataString, sizeNumber, offsetNumber, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Hello", "writeBarcode", [symbologyNumber, dataString, sizeNumber, offsetNumber]);
     },
     setBold: function (boolean, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "Hello", "setBold", [boolean]);
+    },
+    setDoubleWide: function (boolean, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Hello", "setDoubleWide", [boolean]);
+    },
+    setDoubleHigh: function (boolean, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Hello", "setDoubleHigh", [boolean]);
+    },
+    setItalic: function (boolean, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Hello", "setItalic", [boolean]);
+    },
+    setStrikeout: function (boolean, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Hello", "setStrikeout", [boolean]);
+    },
+    setUnderline: function (boolean, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "Hello", "setUnderline", [boolean]);
     },
     write: function (string, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "Hello", "write", [string]);
@@ -41,6 +60,4 @@ module.exports = {
     clearDebugTrace: function (successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "Hello", "clearDebugTrace", [null]);
     },
-
-
 };
