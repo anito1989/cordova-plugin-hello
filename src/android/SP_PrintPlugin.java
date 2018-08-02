@@ -34,7 +34,7 @@ import org.json.JSONObject;
 
 import com.honeywell.mobility.print.*;
 
-public class Hello extends CordovaPlugin {
+public class SP_PrintPlugin extends CordovaPlugin {
     String debugTrace = "";
     LinePrinter lp = null;
 
