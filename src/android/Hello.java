@@ -87,7 +87,7 @@ public class Hello extends CordovaPlugin {
                 if (TryToConnect()) {
                     callbackContext.success();
                 } else {
-                    callbackContext.error();
+                    callbackContext.error(debugTrace);
                 }
 
                 // ConnectTask task = new ConnectTask();
