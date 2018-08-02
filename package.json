@@ -1,30 +1,27 @@
 {
-  "name": "cordova-plugin-hello",
+  "name": "cordova-plugin-sp-print",
   "version": "0.1.0",
-  "description": "A sample for a new cordova plugin",
+  "description": "SoftPlus print solution for cordova",
   "cordova": {
-    "id": "cordova-plugin-hello",
+    "id": "cordova-plugin-sp-print",
     "platforms": [
-      "android",
-      "ios",
-      "wp7"
+      "android"      
     ]
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/don/cordova-plugin-hello.git"
+    "url": "git+https://github.com/anito1989/cordova-plugin-hello.git"
   },
   "keywords": [
     "cordova",
-    "plugin",
-    "hello",
+    "plugin",   
     "ecosystem:cordova",
     "cordova-android"
   ],
-  "author": "Don Coleman",
+  "author": "Soft Plus Team",
   "license": "Apache-2",
   "bugs": {
     "url": "https://github.com/don/cordova-plugin-hello/issues"
   },
-  "homepage": "https://github.com/don/cordova-plugin-hello#readme"
+  "homepage": "https://github.com/anito1989/cordova-plugin-hello#readme"
 }
