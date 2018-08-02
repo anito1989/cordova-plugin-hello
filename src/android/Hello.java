@@ -49,6 +49,37 @@ public class Hello extends CordovaPlugin {
             } else if (action.equals("newLine")) {
                 lp.newLine(data.getInt(0));
                 callbackContext.success();
+            } else if (action.equals("printGraphicBase64")) {
+                String imageData = data.getString(0);
+                int rotation = LinePrinter.GraphicRotationDegrees.DEGREE_0;
+                if (imageData == null) {
+                    callbackContext.error("Base64 encoded string is required!");
+                }
+
+                if (data.getInt(1) == null) {
+                    callbackContext.error("Offset number is required!");
+                }
+
+                if (data.getInt(2) == null) {
+                    callbackContext.error("Width number is required!");
+
+                }
+
+                if (data.getInt(3) == null) {
+                    callbackContext.error("Heigth number is required!");
+                }
+
+                if (data.getInt(4) != null) {
+                    rotation = data.getInt(4);
+
+                }
+
+                lp.writeGraphicBase64(imageData, rotation, data.getInt(1), // Offset in printhead dots from the left of
+                                                                           // the page
+                        data.getInt(2), // Desired graphic width on paper in printhead dots
+                        data.getInt(3)); // Desired graphic height on paper in printhead dots
+
+                callbackContext.success(debugTrace);
             } else if (action.equals("formFeed")) {
                 lp.formFeed();
                 callbackContext.success();
@@ -73,11 +104,11 @@ public class Hello extends CordovaPlugin {
                 debugTrace = "Start connect!";
 
                 if (data.getString(0) == null) {
-                    callbackContext.error("Printer name is requred as a string prameter!");
+                    callbackContext.error("Printer name is required as a string prameter!");
                 }
 
                 if (data.getString(1) == null) {
-                    callbackContext.error("Mac id is requred as a string prameter!");
+                    callbackContext.error("Mac id is required as a string prameter!");
                 }
 
                 if (lp == null) {
@@ -94,6 +125,46 @@ public class Hello extends CordovaPlugin {
                 // task.execute();
             } else if (action.equals("clearDebugTrace")) {
                 debugTrace = "";
+            } else if (action.equals("setBold")) {
+                lp.setBold(data.getBoolean(0));
+                callbackContext.success(debugTrace);
+            } else if (action.equals("setDoubleWide")) {
+                lp.setDoubleWide(data.getBoolean(0));
+                callbackContext.success(debugTrace);
+            } else if (action.equals("setDoubleHigh")) {
+                lp.setDoubleHigh(data.getBoolean(0));
+                callbackContext.success(debugTrace);
+            } else if (action.equals("setItalic")) {
+                lp.setItalic(data.getBoolean(0));
+                callbackContext.success(debugTrace);
+            } else if (action.equals("setStrikeout")) {
+                lp.setStrikeout(data.getBoolean(0));
+                callbackContext.success(debugTrace);
+            } else if (action.equals("setUnderline")) {
+                lp.setUnderline(data.getBoolean(0));
+                callbackContext.success(debugTrace);
+            } else if (action.equals("writeBarcode")) {
+
+                if (data.getInt(0) == null) {
+                    callbackContext.error("Symbology number is required!");
+                }
+
+                if (data.getString(1) == null) {
+                    callbackContext.error("Barcode data string is required!");
+                }
+
+                if (data.getInt(2) == null) {
+                    callbackContext.error("Size number is required!");
+
+                }
+
+                if (data.getInt(3) != null) {
+                    callbackContext.error("offset number is required!");
+                }
+
+                lp.writeBarcode(data.getInt(0), data.getString(1), data.getInt(2), data.getInt(3));
+
+                callbackContext.success(debugTrace);
             } else {
                 callbackContext.success(debugTrace);
             }
@@ -144,17 +215,6 @@ public class Hello extends CordovaPlugin {
             }
         }
         return resp;
-    }
-
-    public class ConnectTask extends AsyncTask<String, Integer, String> {
-        /**
-         * Runs on the UI thread before doInBackground(Params...).
-         */
-        @Override
-        protected String doInBackground(String... args) {
-
-            return "good";
-        }
     }
 
     public class BadPrinterStateException extends Exception {
