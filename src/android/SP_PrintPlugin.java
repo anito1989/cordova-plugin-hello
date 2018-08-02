@@ -1,4 +1,4 @@
-package com.example.plugin;
+package com.SoftPlus.plugin;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
