@@ -56,20 +56,20 @@ public class Hello extends CordovaPlugin {
                     callbackContext.error("Base64 encoded string is required!");
                 }
 
-                if (data.getInt(1) == null) {
+                if (data.getInt(1) == -1) {
                     callbackContext.error("Offset number is required!");
                 }
 
-                if (data.getInt(2) == null) {
+                if (data.getInt(2) == -1) {
                     callbackContext.error("Width number is required!");
 
                 }
 
-                if (data.getInt(3) == null) {
+                if (data.getInt(3) == -1) {
                     callbackContext.error("Heigth number is required!");
                 }
 
-                if (data.getInt(4) != null) {
+                if (data.getInt(4) != -1) {
                     rotation = data.getInt(4);
 
                 }
@@ -145,7 +145,7 @@ public class Hello extends CordovaPlugin {
                 callbackContext.success(debugTrace);
             } else if (action.equals("writeBarcode")) {
 
-                if (data.getInt(0) == null) {
+                if (data.getInt(0) == -1) {
                     callbackContext.error("Symbology number is required!");
                 }
 
@@ -153,12 +153,11 @@ public class Hello extends CordovaPlugin {
                     callbackContext.error("Barcode data string is required!");
                 }
 
-                if (data.getInt(2) == null) {
+                if (data.getInt(2) == -1) {
                     callbackContext.error("Size number is required!");
-
                 }
 
-                if (data.getInt(3) != null) {
+                if (data.getInt(3) != -1) {
                     callbackContext.error("offset number is required!");
                 }
 
