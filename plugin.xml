@@ -2,34 +2,44 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         id="com.example.hello"
         version="0.7.0">
-   <name>Hello</name>
-   <engines>
+
+  <name>Hello</name>
+
+  <engines>
     <engine name="cordova" version=">=3.4.0"/>
   </engines>
-   <asset src="www/hello.js" target="js/hello.js"/>
-   <js-module src="www/hello.js" name="hello">
-    <clobbers target="hello" />
+
+  <asset src="www/sp_printplugin.js" target="js/sp_printplugin.js"/>
+
+  <js-module src="www/sp_printplugin.js" name="sp_printplugin">
+    <clobbers target="sp_printplugin" />
   </js-module>
-   <platform name="android">
-     <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="Hello">
-        <param name="android-package" value="com.example.plugin.Hello"/>
+
+  <platform name="android">
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="sp_printplugin">
+        <param name="android-package" value="com.SoftPlus.plugin.SP_PrintPlugin"/>
       </feature>
     </config-file>
-    <lib-file src="src/android/libs/hsm-android-print.jar" />
-    <source-file src="src/android/Hello.java" target-dir="src/com/example/plugin/"/>
+
+    <source-file src="src/android/SP_PrintPlugin.java" target-dir="src/com/SoftPlus/plugin/"/>
   </platform>
-   <platform name="ios">
+
+  <platform name="ios">
     
     <config-file target="config.xml" parent="/widget">
-      <feature name="Hello">
+      <feature name="sp_printplugin">
         <param name="ios-package" value="HWPHello" />
       </feature>
     </config-file>
-     <header-file src="src/ios/HWPHello.h" target-dir="HelloPlugin"/>
+
+    <header-file src="src/ios/HWPHello.h" target-dir="HelloPlugin"/>
     <source-file src="src/ios/HWPHello.m" target-dir="HelloPlugin"/>
   </platform>
-   <platform name="wp7">
+
+  <platform name="wp7">
     <source-file src="src/wp7/Hello.cs"/>
   </platform>
- </plugin>
+
+</plugin>
