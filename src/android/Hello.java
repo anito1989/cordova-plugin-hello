@@ -84,7 +84,7 @@ public class Hello extends CordovaPlugin {
                     setIntermecPrintersEnvironment(data.getString(0), data.getString(1));
                 }
 
-                if (TryToConnect) {
+                if (TryToConnect()) {
                     callbackContext.success();
                 } else {
                     callbackContext.error();
