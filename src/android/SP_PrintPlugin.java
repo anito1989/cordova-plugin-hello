@@ -270,7 +270,7 @@ public class SP_PrintPlugin extends CordovaPlugin {
             debugTrace += " - " + exToString(e);
         }
 
-        debugTrace = "Created LinePrinter!;";
+        debugTrace += "Created LinePrinter!;";
     }
 
     private boolean clearIntermecPrintersEnvironment() {
@@ -303,7 +303,7 @@ public class SP_PrintPlugin extends CordovaPlugin {
             int numtries = 0;
             int maxretry = 2;
             while (numtries < maxretry) {
-                debugTrace = "Connect LinePrinter!;";
+                debugTrace += "Connect LinePrinter!;";
                 try {
                     lp.connect(); // Connects to the printer
                     break;
@@ -313,8 +313,8 @@ public class SP_PrintPlugin extends CordovaPlugin {
                 }
             }
             if (numtries == maxretry)
-                lp.connect();// Final retry
-            debugTrace = "Connected to a printer!;";
+            lp.connect();// Final retry
+            
 
             // Check the state of the printer and abort printing if there are
             // any critical errors detected.
@@ -331,6 +331,7 @@ public class SP_PrintPlugin extends CordovaPlugin {
                 }
             }
 
+            debugTrace = "Connected to a printer!;";
             return true;
 
         } catch (Exception e) {
