@@ -66,7 +66,7 @@ public class SP_PrintPlugin extends CordovaPlugin {
                 }
 
                 if (data.getInt(3) == -1) {
-                    callbackContext.error("Heigth number is required!");
+                    callbackContext.error("Height number is required!");
                 }
 
                 if (data.getInt(4) != -1) {
@@ -89,7 +89,7 @@ public class SP_PrintPlugin extends CordovaPlugin {
                 }
                 try {
                     int[] status = lp.getStatus();
-                    callbackContext.success("To do responce");
+                    callbackContext.success("To do response");
                 } catch (Exception e) {
                     callbackContext.error("Not connected!");
                 }
@@ -104,11 +104,11 @@ public class SP_PrintPlugin extends CordovaPlugin {
                 debugTrace = "Start connect!";
 
                 if (data.getString(0) == null) {
-                    callbackContext.error("Printer name is required as a string prameter!");
+                    callbackContext.error("Printer name is required as a string parameter!");
                 }
 
                 if (data.getString(1) == null) {
-                    callbackContext.error("Mac id is required as a string prameter!");
+                    callbackContext.error("Mac id is required as a string parameter!");
                 }
 
                 if (lp == null) {
@@ -278,6 +278,8 @@ public class SP_PrintPlugin extends CordovaPlugin {
             lp.disconnect(); // Disconnects from the printer
             lp.close(); // Releases resources
             lp = null;
+
+            debugTrace += "LP object disposed ";
             return true;
         } catch (Exception e) {
             debugTrace += "LinePrinterException: " + exToString(e);
@@ -297,11 +299,11 @@ public class SP_PrintPlugin extends CordovaPlugin {
 
     private boolean TryToConnect() {
         try {
-            // A retry sequence in case the bluetooth socket is temporarily not ready
+            // A retry sequence in case the Bluetooth socket is temporarily not ready
             int numtries = 0;
             int maxretry = 2;
             while (numtries < maxretry) {
-                debugTrace = "Coonect LinePrinter!;";
+                debugTrace = "Connect LinePrinter!;";
                 try {
                     lp.connect(); // Connects to the printer
                     break;
