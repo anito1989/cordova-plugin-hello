@@ -101,7 +101,7 @@ public class SP_PrintPlugin extends CordovaPlugin {
                 }
             } else if (action.equals("connect")) {
 
-                debugTrace = "Start connect!";
+                debugTrace += "Start connect!";
 
                 if (data.getString(0) == null) {
                     callbackContext.error("Printer name is required as a string parameter!");
@@ -252,16 +252,16 @@ public class SP_PrintPlugin extends CordovaPlugin {
 
         // Setup context
 
-        debugTrace = "Setting up extra setting!;";
+        debugTrace += "Setting up extra setting!;";
         LinePrinter.ExtraSettings exSettings = new LinePrinter.ExtraSettings();
         exSettings.setContext(this.cordova.getActivity().getApplicationContext());
-        debugTrace = "Done Setting up extra setting!;";
+        debugTrace += "Done Setting up extra setting!;";
 
         AssetManager assetManager = this.cordova.getActivity().getAssets();
 
-        debugTrace = "Reading Settings!;";
+        debugTrace += "Reading Settings!;";
         String jsonCmdAttribStr = loadPrintSettings(assetManager);
-        debugTrace = "Finished reading!;";
+        debugTrace += "Finished reading!;";
         String sPrinterURI = "bt://" + mac;
 
         try {
